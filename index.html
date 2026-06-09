@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHAP — 2 Wochen · 15.06–28.06 · U21</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0e0f11;--surface:#16181c;--border:#2a2d35;
+    --accent:#d4f53c;--accent2:#3cffa0;--accent3:#ff6b35;--accent4:#38bdf8;--accent5:#c084fc;
+    --text:#e8eaed;--muted:#6b7280;
+    --heading:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh}
+  .hero{background:linear-gradient(135deg,#0d0f1a 0%,#151a28 60%,#0e0f11 100%);border-bottom:1px solid var(--border);padding:28px 24px 22px;position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(212,245,60,0.06) 0%,transparent 65%);pointer-events:none}
+  .tag{display:inline-flex;align-items:center;background:rgba(212,245,60,0.1);color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+  .hero h1{font-family:var(--heading);font-size:clamp(30px,7vw,48px);line-height:.92;letter-spacing:.02em;color:#fff;margin-bottom:6px}
+  .hero h1 span{color:var(--accent)}
+  .hero-sub{font-size:12px;color:var(--muted);margin-bottom:12px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:7px}
+  .hero-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;padding:3px 9px}
+  .hero-pill b{color:var(--text)}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+  .container{padding:18px 16px;max-width:720px;margin:0 auto}
+
+  /* WEEK TABS */
+  .week-tabs{display:flex;gap:5px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+  .week-tab{flex-shrink:0;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:var(--body);font-size:11px;font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.05em;text-align:center;min-width:90px}
+  .week-tab:hover{border-color:var(--accent);color:var(--accent)}
+  .week-tab.active{background:var(--accent);border-color:var(--accent);color:#0e0f11}
+  .week-tab .wk-dates{display:block;font-size:9px;font-weight:500;opacity:.75;margin-top:2px;letter-spacing:.02em;text-transform:none}
+
+  /* WEEK PROGRESS */
+  .week-prog{margin-bottom:16px}
+  .wp-top{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+  .wp-bar{height:3px;background:var(--border);border-radius:2px}
+  .wp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s ease}
+
+  /* VORBEREITUNG BANNER */
+  .prep-banner{background:rgba(192,132,252,0.06);border:1px solid rgba(192,132,252,0.2);border-left:3px solid var(--accent5);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .prep-banner-icon{font-size:18px;flex-shrink:0}
+  .prep-banner-text{font-size:12px;color:var(--muted);line-height:1.6}
+  .prep-banner-text b{color:var(--accent5)}
+
+  /* LEGEND STRIP */
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:3px 8px}
+  .leg-dot{width:7px;height:7px;border-radius:50%}
+
+  /* DAY STRIP */
+  .day-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+  .day-btn{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 6px;cursor:pointer;transition:all .15s;text-align:center;position:relative;overflow:hidden}
+  .day-btn:hover{border-color:#3a3d45}
+  .day-btn.active{border-color:var(--accent);background:rgba(212,245,60,0.06)}
+  .day-btn.active::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)}
+  .day-btn-label{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:2px}
+  .day-btn-name{font-family:var(--heading);font-size:17px;line-height:1;color:var(--text);margin-bottom:4px}
+  .day-btn.active .day-btn-name{color:var(--accent)}
+  .day-btn-date{font-size:9px;color:var(--muted);margin-bottom:4px}
+  .day-btn-badge{display:inline-block;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:4px}
+  .b-rsa{background:rgba(255,107,53,0.12);color:var(--accent3)}
+  .b-hsr{background:rgba(56,189,248,0.12);color:var(--accent4)}
+  .b-mix{background:rgba(60,255,160,0.12);color:var(--accent2)}
+  .b-spiel{background:rgba(192,132,252,0.12);color:var(--accent5)}
+
+  /* SESSION */
+  .session-header-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 15px;margin-bottom:11px;display:flex;align-items:center;gap:13px}
+  .session-icon-big{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .si-mix{background:rgba(60,255,160,0.1)}
+  .si-rsa{background:rgba(255,107,53,0.1)}
+  .si-hsr{background:rgba(56,189,248,0.1)}
+  .si-spiel{background:rgba(192,132,252,0.1)}
+  .session-title-block h2{font-family:var(--heading);font-size:19px;letter-spacing:.03em;line-height:1.1}
+  .session-title-block p{font-size:11px;color:var(--muted);margin-top:2px}
+  .session-stats{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+  .stat-chip{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:11px}
+  .stat-chip span{color:var(--muted)}
+  .stat-chip b{color:var(--text)}
+  .topup-note{background:rgba(212,245,60,0.05);border:1px solid rgba(212,245,60,0.18);border-left:3px solid var(--accent);border-radius:7px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:var(--muted);line-height:1.6}
+  .topup-note b{color:var(--accent)}
+
+  /* BLOCKS */
+  .blocks{display:flex;flex-direction:column;gap:7px}
+  .block-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+  .block-header{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer}
+  .block-header-left{display:flex;align-items:center;gap:9px}
+  .block-num{font-family:var(--heading);font-size:18px;color:var(--accent);opacity:.3;line-height:1;min-width:18px}
+  .block-info h4{font-size:13px;font-weight:600}
+  .block-info p{font-size:11px;color:var(--muted);margin-top:1px}
+  .block-right{display:flex;align-items:center;gap:6px}
+  .type-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:4px}
+  .tt-hsr{background:rgba(56,189,248,0.12);color:var(--accent4)}
+  .tt-rsa{background:rgba(255,107,53,0.12);color:var(--accent3)}
+  .tt-pyr{background:rgba(60,255,160,0.12);color:var(--accent2)}
+  .tt-shuttle{background:rgba(212,245,60,0.12);color:var(--accent)}
+  .tt-mob{background:rgba(255,255,255,0.06);color:var(--muted)}
+  .tt-spiel{background:rgba(192,132,252,0.12);color:var(--accent5)}
+  .chevron{color:var(--muted);font-size:10px;transition:transform .2s}
+  .block-card.open .chevron{transform:rotate(180deg)}
+  .block-body{display:none;border-top:1px solid var(--border);padding:11px 13px}
+  .block-card.open .block-body{display:block}
+  .block-goal{font-size:12px;color:var(--muted);padding-left:9px;border-left:2px solid var(--accent);margin-bottom:10px;line-height:1.6}
+
+  /* HSR PARAMS */
+  .hsr-params{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px}
+  .hsr-p{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.15);border-radius:6px;padding:6px 7px;text-align:center}
+  .hsr-p-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+  .hsr-p-val{font-family:var(--heading);font-size:15px;color:var(--accent4);line-height:1}
+
+  /* PYRAMID VISUAL */
+  .pyramid-wrap{margin:10px 0;display:flex;flex-direction:column;gap:4px;align-items:center}
+  .pyr-row{display:flex;align-items:center;gap:8px}
+  .pyr-bar-wrap{display:flex;gap:3px;align-items:center}
+  .pyr-bar{background:rgba(60,255,160,0.15);border:1px solid rgba(60,255,160,0.3);border-radius:4px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--accent2);transition:all .2s;cursor:default;min-width:36px;padding:0 8px}
+  .pyr-bar.peak{background:rgba(60,255,160,0.25);border-color:var(--accent2)}
+  .pyr-arrow{color:var(--muted);font-size:11px}
+  .pyr-pause{font-size:10px;color:var(--muted);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:1px 5px}
+  .pyr-legend{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+
+  /* 5-10-5 VISUAL */
+  .fiveten-wrap{background:rgba(255,107,53,0.04);border:1px solid rgba(255,107,53,0.15);border-radius:7px;padding:10px 12px;margin:8px 0}
+  .fiveten-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent3);margin-bottom:8px}
+  .fiveten-seq{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+  .ft-block{background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.2);border-radius:5px;padding:5px 9px;text-align:center}
+  .ft-dist{font-family:var(--heading);font-size:16px;color:var(--accent3);line-height:1}
+  .ft-dir{font-size:9px;color:var(--muted)}
+  .ft-arrow{color:rgba(255,107,53,0.4);font-size:13px}
+  .ft-total{font-size:11px;color:var(--accent3);margin-top:6px}
+
+  /* SHUTTLE VISUAL */
+  .shuttle-wrap{background:rgba(212,245,60,0.03);border:1px solid rgba(212,245,60,0.12);border-radius:7px;padding:10px 12px;margin:8px 0}
+  .shuttle-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:8px}
+  .shuttle-seq{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+  .shuttle-block{background:rgba(212,245,60,0.08);border:1px solid rgba(212,245,60,0.2);border-radius:5px;padding:5px 10px;text-align:center}
+  .shuttle-dist{font-family:var(--heading);font-size:18px;color:var(--accent);line-height:1}
+  .shuttle-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .shuttle-arrow{color:var(--muted);font-size:14px}
+
+  /* DRILLS */
+  .drills{display:flex;flex-direction:column;gap:5px}
+  .drill{background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:6px;padding:8px 11px}
+  .drill.d-hsr{border-left:2px solid var(--accent4)}
+  .drill.d-rsa{border-left:2px solid var(--accent3)}
+  .drill.d-pyr{border-left:2px solid var(--accent2)}
+  .drill.d-shuttle{border-left:2px solid var(--accent)}
+  .drill.d-spiel{border-left:2px solid var(--accent5)}
+  .drill-name{font-size:13px;font-weight:500;margin-bottom:2px}
+  .drill-detail{font-size:11px;color:var(--muted)}
+  .drill-cue{margin-top:4px;font-size:11px;color:var(--accent);font-style:italic}
+
+  /* SETS TABLE */
+  .sets-table{width:100%;border-collapse:collapse;margin-top:7px;font-size:12px}
+  .sets-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:5px 7px;text-align:left;border-bottom:1px solid var(--border)}
+  .sets-table td{padding:6px 7px;border-bottom:1px solid rgba(42,45,53,0.5)}
+  .sets-table tr:last-child td{border-bottom:none}
+  .note-box{background:rgba(212,245,60,0.04);border:1px solid rgba(212,245,60,0.12);border-radius:6px;padding:8px 11px;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6}
+  .note-box b{color:var(--accent)}
+
+  /* PROGRESSIVE SHUTTLE */
+  .prog-shuttle-wrap{background:rgba(56,189,248,0.04);border:1px solid rgba(56,189,248,0.18);border-radius:8px;padding:12px 14px;margin:8px 0}
+  .prog-shuttle-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent4);margin-bottom:10px}
+  .prog-shuttle-rows{display:flex;flex-direction:column;gap:6px}
+  .psr-row{display:flex;align-items:center;gap:6px}
+  .psr-leg{background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:5px;padding:4px 9px;font-size:11px;font-weight:600;color:var(--accent4);white-space:nowrap}
+  .psr-arrow{color:rgba(56,189,248,0.4);font-size:11px;flex-shrink:0}
+  .psr-label{font-size:10px;color:var(--muted);margin-left:2px}
+  .psr-timing{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .psr-time{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:11px}
+  .psr-time span{color:var(--muted)}
+  .psr-time b{color:var(--text)}
+
+  .si-off{background:rgba(107,114,128,0.1)}
+  .b-off{background:rgba(107,114,128,0.12);color:var(--muted)}
+  .footer{border-top:1px solid var(--border);margin-top:28px;padding:13px 16px;text-align:center}
+  .footer p{font-size:11px;color:var(--muted)}
+  .footer span{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="tag">RH Applied Performance</div>
+  <h1>2 WOCHEN<br><span>PROGRAMM</span></h1>
+  <div class="hero-sub">Vollständig eigenständige Einheiten · U21 · Off-Season Finalblock vor Vorbereitungsphase</div>
+  <div class="hero-meta">
+    <div class="hero-pill"><div class="dot"></div><b>15.06 – 28.06.2025</b></div>
+    <div class="hero-pill"><div class="dot"></div>Mo: Aufwärmen + Pyramide + HSR</div>
+    <div class="hero-pill"><div class="dot"></div>Di: Aufwärmen + RSA / 5-10-5</div>
+    <div class="hero-pill"><div class="dot"></div>Mi: Aufwärmen + HSR Haupttag</div>
+    <div class="hero-pill"><div class="dot"></div>Sa: Prog. Shuttle + Spielsimulation (W1) / OFF (W2)</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="week-tabs">
+    <div class="week-tab active" onclick="setWeek(1)">WOCHE 1<span class="wk-dates">15 – 21.06</span></div>
+    <div class="week-tab" onclick="setWeek(2)">WOCHE 2<span class="wk-dates">22 – 28.06</span></div>
+  </div>
+
+  <div class="week-prog">
+    <div class="wp-top"><span>Belastungsprogression</span><span id="prog-label">Fundament — Einstieg</span></div>
+    <div class="wp-bar"><div class="wp-fill" id="prog-fill" style="width:40%"></div></div>
+  </div>
+
+  <div class="prep-banner">
+    <div class="prep-banner-icon">🔜</div>
+    <div class="prep-banner-text"><b>29.06 Start Vorbereitungsphase im Team.</b> Dieser Block baut die aerobe Basis auf und schärft die Speed-Qualitäten — damit der Spieler von Tag 1 in der Vorbereitung leistungsfähig ist, nicht hinterher läuft.</div>
+  </div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--accent2)"></div>Pyramidenlauf (Mo)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>Prog. Shuttle (Sa)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--accent4)"></div>HSR &gt;19.7 km/h</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--accent3)"></div>RSA / 5-10-5</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--accent5)"></div>Spielsimulation</div>
+  </div>
+
+  <div class="day-strip" id="day-strip"></div>
+  <div id="session-container"></div>
+
+  <div class="footer"><p><span>RH Applied Performance GmbH</span> · Raphael Hügli MSc · rhappliedperformance.ch</p></div>
+</div>
+
+<script>
+// Helpers
+function pyrHTML(steps, pauseSec) {
+  const bars = steps.map((s,i) => {
+    const isPeak = i === Math.floor(steps.length/2);
+    return `<div class="pyr-bar${isPeak?' peak':''}">${s}min</div>`;
+  });
+  const withArrows = bars.map((b,i) => i<bars.length-1 ? b+`<span class="pyr-arrow">→</span>` : b).join('');
+  return `<div class="pyramid-wrap">
+    <div class="pyr-row"><div class="pyr-bar-wrap">${withArrows}</div></div>
+    <div class="pyr-legend">Pause zwischen Stufen: ${pauseSec}s aktiv Gehen</div>
+  </div>`;
+}
+
+function fivetenHTML(reps, pause) {
+  return `<div class="fiveten-wrap">
+    <div class="fiveten-title">⚡ 5-10-5 Stop &amp; Go</div>
+    <div class="fiveten-seq">
+      <div class="ft-block"><div class="ft-dist">5m</div><div class="ft-dir">→ Stop</div></div>
+      <span class="ft-arrow">▶</span>
+      <div class="ft-block"><div class="ft-dist">10m</div><div class="ft-dir">← Stop</div></div>
+      <span class="ft-arrow">▶</span>
+      <div class="ft-block"><div class="ft-dist">5m</div><div class="ft-dir">→ Finish</div></div>
+    </div>
+    <div class="ft-total">${reps} Wdh. · Pause: ${pause} · Total: 20m pro Wdh.</div>
+  </div>`;
+}
+
+function progShuttleHTML(reps, note) {
+  return `<div class="prog-shuttle-wrap">
+    <div class="prog-shuttle-title">📐 Progressive Shuttle Run — 1 Wdh. = Stufe 1+2+3</div>
+    <svg width="100%" viewBox="0 0 660 430" style="display:block;margin-bottom:8px">
+      <defs>
+        <marker id="psarrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Field -->
+      <rect x="40" y="15" width="300" height="395" rx="4" fill="#2d6e2d"/>
+      <rect x="40" y="15" width="300" height="38" fill="#317531"/>
+      <rect x="40" y="91" width="300" height="38" fill="#317531"/>
+      <rect x="40" y="167" width="300" height="38" fill="#317531"/>
+      <rect x="40" y="243" width="300" height="38" fill="#317531"/>
+      <rect x="40" y="319" width="300" height="38" fill="#317531"/>
+      <rect x="40" y="15" width="300" height="395" rx="4" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      <!-- Lines -->
+      <line x1="40" y1="390" x2="340" y2="390" stroke="white" stroke-width="2.5"/>
+      <line x1="40" y1="338" x2="340" y2="338" stroke="rgba(255,255,255,0.4)" stroke-width="1" stroke-dasharray="5 4"/>
+      <line x1="40" y1="233" x2="340" y2="233" stroke="white" stroke-width="2"/>
+      <line x1="66" y1="233" x2="66" y2="390" stroke="white" stroke-width="1.5"/>
+      <line x1="314" y1="233" x2="314" y2="390" stroke="white" stroke-width="1.5"/>
+      <path d="M66 282 Q190 256 314 282" fill="none" stroke="white" stroke-width="1.5"/>
+      <line x1="40" y1="108" x2="340" y2="108" stroke="white" stroke-width="2"/>
+      <circle cx="190" cy="108" r="34" fill="none" stroke="white" stroke-width="1.5"/>
+      <circle cx="190" cy="108" r="3" fill="white"/>
+      <rect x="146" y="7" width="88" height="14" rx="2" fill="none" stroke="white" stroke-width="1.5"/>
+      <!-- Labels -->
+      <text font-family="sans-serif" font-size="11" x="32" y="394" text-anchor="end" fill="rgba(255,255,255,0.95)">Grundlinie</text>
+      <text font-family="sans-serif" font-size="11" x="32" y="342" text-anchor="end" fill="rgba(255,255,255,0.7)">5m</text>
+      <text font-family="sans-serif" font-size="11" x="32" y="237" text-anchor="end" fill="rgba(255,255,255,0.95)">16m</text>
+      <text font-family="sans-serif" font-size="11" x="32" y="112" text-anchor="end" fill="rgba(255,255,255,0.95)">Mitte</text>
+      <rect x="156" y="395" width="44" height="13" rx="3" fill="rgba(255,255,255,0.18)"/>
+      <text font-family="sans-serif" font-size="10" x="178" y="405" text-anchor="middle" fill="white">START</text>
+      <!-- A: GL→5m Stufe1 hin -->
+      <line x1="148" y1="386" x2="148" y2="342" stroke="#facc15" stroke-width="2.5" marker-end="url(#psarrow)"/>
+      <!-- B: 5m→GL Stufe1 zurück -->
+      <line x1="160" y1="342" x2="160" y2="386" stroke="#facc15" stroke-width="2.5" marker-end="url(#psarrow)" opacity="0.75"/>
+      <!-- Bogen B→C -->
+      <path d="M160 389 Q170 400 180 389" fill="none" stroke="#fb923c" stroke-width="1.5" opacity="0.7"/>
+      <!-- C: GL→16m Stufe2 hin -->
+      <line x1="180" y1="386" x2="180" y2="237" stroke="#fb923c" stroke-width="2.5" marker-end="url(#psarrow)"/>
+      <!-- D: 16m→GL Stufe2 zurück -->
+      <line x1="192" y1="237" x2="192" y2="386" stroke="#fb923c" stroke-width="2.5" marker-end="url(#psarrow)" opacity="0.75"/>
+      <!-- Bogen D→E -->
+      <path d="M192 389 Q202 400 212 389" fill="none" stroke="#f87171" stroke-width="1.5" opacity="0.7"/>
+      <!-- E: GL→Mitte Stufe3 hin -->
+      <line x1="212" y1="386" x2="212" y2="114" stroke="#f87171" stroke-width="2.5" marker-end="url(#psarrow)"/>
+      <!-- F: Mitte→16m Stufe3 zurück SOLIDE -->
+      <line x1="224" y1="114" x2="224" y2="237" stroke="#f87171" stroke-width="2.5" marker-end="url(#psarrow)" opacity="0.85"/>
+      <!-- G: 16m→GL GESTRICHELT Pause -->
+      <line x1="224" y1="239" x2="224" y2="384" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#psarrow)" opacity="0.85"/>
+      <!-- Stufen Labels -->
+      <rect x="236" y="355" width="38" height="14" rx="2" fill="rgba(250,204,21,0.2)"/>
+      <text font-family="sans-serif" font-size="10" x="255" y="365" text-anchor="middle" fill="#facc15">① 5m</text>
+      <rect x="236" y="290" width="44" height="14" rx="2" fill="rgba(251,146,60,0.2)"/>
+      <text font-family="sans-serif" font-size="10" x="258" y="300" text-anchor="middle" fill="#fb923c">② 16m</text>
+      <rect x="236" y="158" width="54" height="14" rx="2" fill="rgba(248,113,113,0.2)"/>
+      <text font-family="sans-serif" font-size="10" x="263" y="168" text-anchor="middle" fill="#f87171">③ Mitte</text>
+      <!-- Pause label -->
+      <rect x="234" y="296" width="62" height="26" rx="3" fill="rgba(239,68,68,0.12)"/>
+      <text font-family="sans-serif" font-size="10" x="265" y="308" text-anchor="middle" fill="#ef4444">locker</text>
+      <text font-family="sans-serif" font-size="10" x="265" y="320" text-anchor="middle" fill="#ef4444">traben ↓</text>
+      <!-- RIGHT: Sequenz-Box -->
+      <rect x="358" y="15" width="292" height="248" rx="8" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+      <text font-family="sans-serif" font-size="12" font-weight="600" x="504" y="38" text-anchor="middle" fill="#e8eaed">1 Wdh. = Stufe ①+②+③</text>
+      <!-- S1 -->
+      <rect x="370" y="50" width="6" height="34" rx="2" fill="#facc15"/>
+      <text font-family="sans-serif" font-size="12" x="386" y="63" fill="#e8eaed">① GL → 5m → GL</text>
+      <text font-family="sans-serif" font-size="11" x="386" y="78" fill="#6b7280">sofort weiter ↓</text>
+      <!-- S2 -->
+      <rect x="370" y="92" width="6" height="34" rx="2" fill="#fb923c"/>
+      <text font-family="sans-serif" font-size="12" x="386" y="105" fill="#e8eaed">② GL → 16m → GL</text>
+      <text font-family="sans-serif" font-size="11" x="386" y="120" fill="#6b7280">sofort weiter ↓</text>
+      <!-- S3 -->
+      <rect x="370" y="134" width="6" height="34" rx="2" fill="#f87171"/>
+      <text font-family="sans-serif" font-size="12" x="386" y="147" fill="#e8eaed">③ GL → Mitte → 16m</text>
+      <text font-family="sans-serif" font-size="11" x="386" y="162" fill="#6b7280">bei 16m ankommen ↓</text>
+      <!-- Pause -->
+      <rect x="370" y="176" width="6" height="30" rx="2" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text font-family="sans-serif" font-size="12" x="386" y="189" fill="#ef4444">locker zurücktraben GL</text>
+      <text font-family="sans-serif" font-size="13" font-weight="600" x="386" y="204" fill="#ef4444">35s Erholung</text>
+      <!-- Divider -->
+      <line x1="364" y1="272" x2="642" y2="272" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+      <!-- Timing -->
+      <rect x="358" y="280" width="292" height="52" rx="8" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+      <text font-family="sans-serif" font-size="11" x="504" y="300" text-anchor="middle" fill="#6b7280">Zeitvorgabe Stufen ①+②+③</text>
+      <text font-family="sans-serif" font-size="16" font-weight="600" x="504" y="322" text-anchor="middle" fill="#e8eaed">25 Sekunden</text>
+      <!-- Progression -->
+      <rect x="358" y="346" width="292" height="60" rx="8" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+      <text font-family="sans-serif" font-size="11" x="504" y="366" text-anchor="middle" fill="#6b7280">Wiederholungen pro Session</text>
+      <text font-family="sans-serif" font-size="12" x="368" y="388" fill="#6b7280">W1 Sa: 3 Runden  ·  W2 Sa: 5 Runden</text>
+      <text font-family="sans-serif" font-size="12" x="368" y="402" fill="#6b7280">Progression: +2 Runden = +Volumen</text>
+    </svg>
+    <div class="psr-timing">
+      <div class="psr-time"><span>Wdh. diese Session: </span><b>${reps}</b></div>
+      <div class="psr-time"><span>Zeitvorgabe: </span><b>25s</b></div>
+      <div class="psr-time"><span>Erholung: </span><b>35s locker traben</b></div>
+    </div>
+    ${note ? `<div class="note-box" style="margin-top:8px">📌 ${note}</div>` : ''}
+  </div>`;
+}
+
+function hsrHTML(on, off, pace, bouts, vol) {
+  return `<div class="hsr-params">
+    <div class="hsr-p"><div class="hsr-p-label">On</div><div class="hsr-p-val">${on}</div></div>
+    <div class="hsr-p"><div class="hsr-p-label">Off</div><div class="hsr-p-val">${off}</div></div>
+    <div class="hsr-p"><div class="hsr-p-label">Pace</div><div class="hsr-p-val">${pace}</div></div>
+    <div class="hsr-p"><div class="hsr-p-label">Bouts</div><div class="hsr-p-val">${bouts}</div></div>
+  </div><div style="font-size:11px;color:var(--accent4);margin-bottom:9px">Total HSR: ${vol}</div>`;
+}
+
+const WARMUP_STANDARD = `<div class="drills">
+  <div class="drill"><div class="drill-name">5 min lockeres Einlaufen</div><div class="drill-detail">Zone 1–2, konstant, Atemrhythmus finden</div></div>
+  <div class="drill"><div class="drill-name">Running ABC · je 2×20m</div><div class="drill-detail">A-March → A-Skip → B-Skip → Carioca → Laterals</div></div>
+  <div class="drill"><div class="drill-name">Aktivierung</div><div class="drill-detail">Glute Bridge unilateral 2×10/Seite · Lateral Band Walk 2×12/Seite · Leg Swing frontal + lateral 10×</div></div>
+  <div class="drill"><div class="drill-name">3× Build-up 30m bis 85%</div><div class="drill-detail">ZNS vorbereiten — letzter Build-up scharf</div></div>
+</div>`;
+
+const WARMUP_SA = `<div class="drills">
+  <div class="drill"><div class="drill-name">8 min lockeres Einlaufen</div><div class="drill-detail">Zone 1–2, ruhig anfangen</div></div>
+  <div class="drill"><div class="drill-name">Running ABC · je 2×20m</div><div class="drill-detail">A-March → A-Skip → B-Skip → Carioca → Laterals</div></div>
+  <div class="drill"><div class="drill-name">Aktivierung</div><div class="drill-detail">Glute Bridge unilateral 2×10/Seite · Lateral Band Walk 2×12/Seite · Leg Swing 10× · Hip 90/90 je 60s</div></div>
+  <div class="drill"><div class="drill-name">4× Build-up 30m bis 90%</div><div class="drill-detail">Letzter Build-up maximal scharf — ZNS auf Vollbetrieb</div></div>
+</div>`;
+
+const DAYS_META = {
+  1: { mo:"16.06", di:"17.06", mi:"18.06", sa:"21.06" },
+  2: { mo:"23.06", di:"24.06", mi:"25.06", fr:"27.06", sa:"28.06", so:"29.06" }
+};
+
+const SESSIONS = {
+  // ═══════════════════════════════ WOCHE 1 ═══════════════════════════════
+  "1_mo": {
+    icon:"🫀", iconCls:"si-mix", title:"AUFBAU — PYRAMIDE + HSR EINSTIEG",
+    sub:"Vollständige Einheit · 16.06", dur:"50 min", int:"Moderat", focus:"Aufwärmen + Pyramide + 10 HSR Bouts",
+    note:"<b>Woche 1 Montag:</b> Eigenständige Einheit — vollständiges Aufwärmen zwingend. Pyramide 1-2-3-2-1 als aerober Einstieg. 10 HSR-Bouts aufgeteilt in 2 Blöcke mit kurzer Pause.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Eigenständige Einheit — kein Top Up. Vollständiges Aufwärmen ist nicht optional.",
+        body: WARMUP_STANDARD },
+      { num:"02", title:"Pyramidenlauf", sub:"1-2-3-2-1 min · Zone 3", tag:"tt-pyr", tagLabel:"Pyramide",
+        goal:"Aerobe Kapazität mit natürlichem Intensitätsverlauf. Sauberer Einstieg in den Block.",
+        body: pyrHTML([1,2,3,2,1], 60) + `<div class="drills"><div class="drill d-pyr"><div class="drill-name">Peak (3 min): 80–88% HFmax</div><div class="drill-detail">1+2 min = Aufbau | 3 min = Spitze | 2+1 min = Abbau | Total: 9 min Arbeit</div><div class="drill-cue">💬 Peak-Stufe: du kannst nicht sprechen. 1 min Stufen: kontrolliert rein und raus.</div></div></div>`,
+        note:"Woche 1 Pyramide: 1-2-3-2-1. Einfach, effektiv, gut dosierbar." },
+      { num:"03", title:"HSR Block — 2×5 Bouts", sub:">19.7 km/h · 12s/20s · 10 Bouts", tag:"tt-hsr", tagLabel:"HSR",
+        goal:"Erste HSR-Exposition des Blocks. Aufgeteilt in 2 Blöcke à 5 Bouts — leichter kontrollierbar nach Pyramide.",
+        body: hsrHTML("12s","20s","&gt;19.7","10","~650m") + `<div class="drills"><div class="drill d-hsr"><div class="drill-name">Block A: 5 Bouts Box-to-Box ~65m · 2 min Pause</div><div class="drill-detail">Gleichmässige Pace — Referenz setzen</div></div><div class="drill d-hsr"><div class="drill-name">Block B: 5 Bouts Box-to-Box ~65m</div><div class="drill-detail">Selbe Pace wie Block A — kein Abfall</div><div class="drill-cue">💬 Nicht ansprinten — auf Pace kommen und halten.</div></div></div>`,
+        note:"Lieber 9 saubere Bouts als 10 mit Qualitätseinbruch. Block B: falls Pace fällt → 4 Bouts reichen." }
+    ]
+  },
+  "1_di": {
+    icon:"🏃", iconCls:"si-rsa", title:"RSA 15m + 5-10-5 EINSTIEG",
+    sub:"Vollständige Einheit · 17.06", dur:"45 min", int:"Hoch", focus:"Aufwärmen + RSA 15m + 5-10-5",
+    note:"<b>Woche 1 Dienstag:</b> Speed-Tag. Kürzere RSA (15m) für maximale Acceleration ohne Max Velocity Stress. 5-10-5 als COD-Qualitätselement. Kein Volumenrekord — Bewegungsqualität Priorität.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Speed-Einheit braucht vollständiges Aufwärmen inkl. scharfer Build-ups.",
+        body: WARMUP_STANDARD },
+      { num:"02", title:"RSA 15m Sprints", sub:"3 Sets × 6× 15m · 270m Total", tag:"tt-rsa", tagLabel:"RSA 15m",
+        goal:"Wiederholte Kurzdistanz-Acceleration. Höhere Startfrequenz als 20m. Baseline für diesen Block.",
+        body:`<table class="sets-table"><tr><th>Set</th><th>Sprints</th><th>Distanz</th><th>Pause/Sprint</th><th>Pause/Set</th></tr><tr><td>1</td><td>6×</td><td>15m</td><td>20s</td><td>3 min</td></tr><tr><td>2</td><td>6×</td><td>15m</td><td>20s</td><td>3 min</td></tr><tr><td>3</td><td>6×</td><td>15m</td><td>20s</td><td>—</td></tr></table><div class="drills" style="margin-top:8px"><div class="drill d-rsa"><div class="drill-name">Zeitmessung: Sprint 1 vs. Sprint 6 pro Set</div><div class="drill-detail">Abfall-Ziel: &lt;5% | 3 Sets × 6 Sprints = 18 Starts</div><div class="drill-cue">💬 "Explosive erste 3 Schritte — kurze Distanz, alles in den Start."</div></div></div>`,
+        note:"15m = maximale Beschleunigung. Kein Max Velocity. Erster Schritt entscheidet." },
+      { num:"03", title:"5-10-5 Stop & Go", sub:"8 Wdh. · COD-Fokus", tag:"tt-rsa", tagLabel:"5-10-5",
+        goal:"Richtungswechsel-Qualität unter leichter RSA-Ermüdung. Baseline für Asymmetrie-Analyse.",
+        body: fivetenHTML("8 Wdh.", "25s aktiv") + `<div class="drills"><div class="drill d-rsa"><div class="drill-name">Startposition: Mitte · 5m rechts → Stop → 10m links → Stop → 5m Mitte</div><div class="drill-detail">Abwechselnd: 4× rechts starten · 4× links starten</div><div class="drill-cue">💬 "Masse aufs Aussenbein beim Stop — dann explosiv raus."</div></div><div class="drill d-rsa"><div class="drill-name">Asymmetrie-Check: welche Seite fühlt sich schwächer an?</div><div class="drill-detail">Subjektiv notieren — Basis für W2</div></div></div>`,
+        note:"Woche 1 Ziel: Bewegungsqualität beobachten, nicht maximales Tempo." }
+    ]
+  },
+  "1_mi": {
+    icon:"💨", iconCls:"si-hsr", title:"HSR HAUPTTAG W1",
+    sub:"Vollständige Einheit · 18.06", dur:"45 min", int:"Mittel", focus:"Aufwärmen + HSR 12 Bouts",
+    note:"<b>Woche 1 Mittwoch:</b> HSR-Schwerpunkttag. Mehr Bouts als Montag. Do+Fr Ruhetage — hier das Wochenvolumen aufbauen. Aufgeteilt in 2 Blöcke für Qualitätskontrolle.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Vollständiges Aufwärmen vor dem HSR-Hauptblock.",
+        body: WARMUP_STANDARD },
+      { num:"02", title:"HSR Hauptblock — 2×6 Bouts", sub:">19.7 km/h · 12s/20s · 12 Bouts", tag:"tt-hsr", tagLabel:"HSR",
+        goal:"Hauptvolumen HSR der Woche. Qualität über alle 12 Bouts. Referenzwert für Woche 2 Mittwoch.",
+        body: hsrHTML("12s","20s","&gt;19.7","12","~780m") + `<div class="drills"><div class="drill d-hsr"><div class="drill-name">Block A: 6 Bouts Box-to-Box ~65m · 2 min Pause</div><div class="drill-detail">Bout 1 = Referenzpace für alle weiteren</div></div><div class="drill d-hsr"><div class="drill-name">Block B: 6 Bouts Box-to-Box ~65m</div><div class="drill-detail">Letzter Bout muss selbe Qualität haben wie Bout 1</div><div class="drill-cue">💬 ~780m HSR Total. Mittwoch ist der Volumen-Anker dieser Woche.</div></div></div>`,
+        note:"Wenn Bout 10–12 stark nachlassen → 10 Bouts reichen. Qualität über Quantität." }
+    ]
+  },
+  "1_sa": {
+    icon:"⚽", iconCls:"si-spiel", title:"SPIELBELASTUNG SIMULATION W1",
+    sub:"Eigenständige Einheit · 21.06", dur:"65–70 min", int:"Hoch", focus:"Aufwärmen + 3× Prog. Shuttle + HSR + RSA",
+    note:"<b>Woche 1 Samstag:</b> Pyramide ersetzt durch Progressive Shuttle Runs (25s On / 35s Off · 3 Runden). Aerobe Kapazität + COD kombiniert. Baseline für W2 Sa.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Vollständiges Aufwärmen — kein Abkürzen. Langer Tag braucht solide Vorbereitung.",
+        body: WARMUP_SA },
+      { num:"02", title:"Progressive Shuttle Runs", sub:"25s On / 35s Off · 3 Runden · progressiv", tag:"tt-shuttle", tagLabel:"Prog. Shuttle",
+        goal:"Aerobe Kapazität + Richtungswechsel kombiniert. Jede Runde länger — natürliche Intensitätsprogression ohne feste Pace-Vorgabe. W1: 3 Runden als Einstieg und Baseline.",
+        body: progShuttleHTML("3 Runden", "W1 Baseline: 3 Runden. RPE nach Runde 3 notieren — direkter Vergleich mit W2 Sa Runde 3."),
+        note:"W1 Baseline: 3 Runden · RPE Runde 3 notieren." },
+      { num:"03", title:"HSR Block", sub:">19.7 km/h · 12s/20s · 10 Bouts", tag:"tt-hsr", tagLabel:"HSR",
+        goal:"HSR unter Vorermüdung — spielrealistische Sequenz. Baseline Sa W1.",
+        body: hsrHTML("12s","20s","&gt;19.7","10","~650m") + `<div class="drills"><div class="drill d-hsr"><div class="drill-name">3 min Pause nach Pyramide → starten</div><div class="drill-detail">Bouts 1–7: Box-to-Box gerade | Bouts 8–10: mit 45° COD bei 40m</div><div class="drill-cue">💬 Pace nach Pyramide halten = echter Fitnessbeweis.</div></div></div>` },
+      { num:"04", title:"RSA 15m + 5-10-5", sub:"2 Sets × 6× 15m + 6× 5-10-5", tag:"tt-rsa", tagLabel:"RSA",
+        goal:"Spielnahe Schlusssequenz unter kumulativer Ermüdung. Gleiche Übungen wie Dienstag.",
+        body:`<table class="sets-table"><tr><th>Set</th><th>Sprints</th><th>Distanz</th><th>Pause/Sprint</th><th>Pause/Set</th></tr><tr><td>1</td><td>6×</td><td>15m</td><td>20s</td><td>3 min</td></tr><tr><td>2</td><td>6×</td><td>15m</td><td>20s</td><td>—</td></tr></table>` + fivetenHTML("6 Wdh.", "25s") + `<div class="note-box">📌 <b>Sa W1 Baseline:</b> ~8.5km · ~650m HSR · ~180m Sprint. Direkt vergleichen mit Sa W2.</div>` }
+    ]
+  },
+
+  // ═══════════════════════════════ WOCHE 2 ═══════════════════════════════
+  "2_mo": {
+    icon:"🫀", iconCls:"si-mix", title:"AUFBAU — PYRAMIDE EXTENDED + HSR",
+    sub:"Vollständige Einheit · 23.06", dur:"55 min", int:"Moderat-Hoch", focus:"Aufwärmen + Pyramide 1-2-3-4-3-2-1 + 12 HSR Bouts",
+    note:"<b>Woche 2 Montag:</b> Pyramide wächst — Peak auf 4 min. +2 HSR-Bouts gegenüber W1 Montag. Letzter aerober Aufbautag vor Vorbereitungsphase.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Vollständiges Aufwärmen — Woche 2 braucht noch mehr Sorgfalt im Warm-Up.",
+        body: WARMUP_STANDARD },
+      { num:"02", title:"Pyramidenlauf Extended", sub:"1-2-3-4-3-2-1 min · Zone 3–4", tag:"tt-pyr", tagLabel:"Pyramide",
+        goal:"Höherer Peak als W1. 4 min auf Intensität aushalten — aerobe Kapazität dehnen.",
+        body: pyrHTML([1,2,3,4,3,2,1], 60) + `<div class="drills"><div class="drill d-pyr"><div class="drill-name">Peak (4 min): 85–90% HFmax</div><div class="drill-detail">Total: 16 min Arbeitszeit | Pause 60s aktiv</div><div class="drill-cue">💬 4 min Peak: gleichmässiges Tempo, nicht am Anfang überpacen. Minute 3–4 sind der eigentliche Stimulus.</div></div></div>`,
+        note:"Woche 2: 1-2-3-4-3-2-1. Peak 1 min länger als W1 — einfachste Form aerober Progression." },
+      { num:"03", title:"HSR Block — 2×6 Bouts", sub:">19.7 km/h · 12s/20s · 12 Bouts", tag:"tt-hsr", tagLabel:"HSR",
+        goal:"+2 Bouts gegenüber W1 Montag. Letzten 2 mit COD — spielnäher.",
+        body: hsrHTML("12s","20s","&gt;19.7","12","~780m") + `<div class="drills"><div class="drill d-hsr"><div class="drill-name">Block A: 6 Bouts Box-to-Box ~65m · 2 min Pause</div><div class="drill-detail">Gleichmässige Referenzpace</div></div><div class="drill d-hsr"><div class="drill-name">Block B: 4 Bouts gerade + 2 Bouts mit 45° COD bei 40m</div><div class="drill-detail">~780m HSR Total</div><div class="drill-cue">💬 COD-Bouts: abbremsen, Wende, sofort auf Pace zurück.</div></div></div>`,
+        note:"~780m HSR nach erweiterter Pyramide. Wenn Block B Qualität einbricht → 10 Bouts und notieren." }
+    ]
+  },
+  "2_di": {
+    icon:"🏃", iconCls:"si-rsa", title:"RSA 20m + 5-10-5 AUFBAU",
+    sub:"Vollständige Einheit · 24.06", dur:"50 min", int:"Hoch", focus:"Aufwärmen + RSA 20m + 10× 5-10-5",
+    note:"<b>Woche 2 Dienstag:</b> Wechsel auf 20m — längere Distanz, Übergang zu Max Velocity. 5-10-5 Volumen steigt. Letzter schwerer Speed-Tag vor Vorbereitungsphase.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Vollständiges Aufwärmen inkl. 4× scharfer Build-up für Max Velocity Vorbereitung.",
+        body: WARMUP_STANDARD },
+      { num:"02", title:"RSA 20m Sprints", sub:"4 Sets × 5× 20m · 400m Total", tag:"tt-rsa", tagLabel:"RSA 20m",
+        goal:"Auf 20m wechseln — Acceleration + Übergang Max Velocity. Ein Set mehr als W1 Dienstag.",
+        body:`<table class="sets-table"><tr><th>Set</th><th>Sprints</th><th>Distanz</th><th>Pause/Sprint</th><th>Pause/Set</th></tr><tr><td>1</td><td>5×</td><td>20m</td><td>25s</td><td>3 min</td></tr><tr><td>2</td><td>5×</td><td>20m</td><td>25s</td><td>3 min</td></tr><tr><td>3</td><td>5×</td><td>20m</td><td>25s</td><td>3 min</td></tr><tr><td>4</td><td>5×</td><td>20m</td><td>25s</td><td>—</td></tr></table><div class="drills" style="margin-top:8px"><div class="drill d-rsa"><div class="drill-name">Vergleich 20m vs. 15m: andere Qualität</div><div class="drill-detail">20m = Acceleration + Übergang Max Vel. | Abfall-Ziel: &lt;5%</div><div class="drill-cue">💬 "Vorwärtslehne bis 15m — dann aufgerichtet durchlaufen."</div></div></div>`,
+        note:"400m RSA Total. Falls Set 4 stark abfällt (&gt;8%) → 3 Sets ausreichend für heute." },
+      { num:"04", title:"5-10-5 Stop & Go", sub:"10 Wdh. · beide Seiten", tag:"tt-rsa", tagLabel:"5-10-5",
+        goal:"+2 Wdh. gegenüber W1. Asymmetrie-Kontrolle: schwächere Seite bewusst.",
+        body: fivetenHTML("10 Wdh. (5× rechts, 5× links)", "22s aktiv") + `<div class="drills"><div class="drill d-rsa"><div class="drill-name">Symmetrie-Check: Vergleich rechts vs. links</div><div class="drill-detail">Subjektiv bewerten: besser als W1 Dienstag?</div><div class="drill-cue">💬 Schwächere Seite: 1–2 Wdh. extra Fokus darauf legen.</div></div></div>`,
+        note:"Letzte schwere RSA-Einheit vor Vorbereitung. Qualität der Stops wichtiger als Geschwindigkeit." }
+    ]
+  },
+  "2_mi": {
+    icon:"💨", iconCls:"si-hsr", title:"HSR KONTROLLIERT — VORBEREITUNG FR",
+    sub:"Vollständige Einheit · 25.06", dur:"40 min", int:"Mittel", focus:"Aufwärmen + 10 Bouts gerade — kein COD",
+    note:"<b>Woche 2 Mittwoch:</b> Bewusst reduziert. Nur 1 Ruhetag bis Freitag (Peak-Einheit) — deshalb kein HSR-Volumen-Peak heute. 10 Bouts gerade, kein COD. Signal setzen, nicht belasten.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Vollständiges Aufwärmen — auch bei reduzierter Einheit nicht kürzen.",
+        body: WARMUP_STANDARD },
+      { num:"02", title:"HSR Kontrolliert — 10 Bouts", sub:">19.7 km/h · 12s/20s · 10 Bouts gerade", tag:"tt-hsr", tagLabel:"HSR",
+        goal:"Signal erhalten ohne zu belasten. Kein COD, kein Peak. Freitag ist der Haupttag dieser Wochenhälfte.",
+        body: hsrHTML("12s","20s","&gt;19.7","10","~650m") + `<div class="drills"><div class="drill d-hsr"><div class="drill-name">10 Bouts Box-to-Box gerade ~65m · keine Richtungswechsel</div><div class="drill-detail">Gleichmässige Pace · kein Effort-Gesicht · flüssig laufen</div><div class="drill-cue">💬 Heute ist nicht der Haupttag. Freitag ist der Haupttag. Kontrolliert rein und raus.</div></div></div>`,
+        note:"Bewusste Reduktion gegenüber W2-Plan (14 Bouts / COD) → ermöglicht Peak-Einheit am Freitag mit nur 1 Ruhetag dazwischen." }
+    ]
+  },
+  "2_fr": {
+    icon:"⚽", iconCls:"si-spiel", title:"PEAK — FITNESS-CHECK VOR VORBEREITUNG",
+    sub:"Vollständige Einheit · 27.06", dur:"70–75 min", int:"Hoch", focus:"5× Prog. Shuttle + 12 HSR + RSA · 2 Ruhetage danach",
+    note:"<b>Woche 2 Freitag — Letzter Trainingstag:</b> Die härteste Einheit des Blocks. Sa + So komplett frei → optimale Erholung für Montag Vorbereitungsstart. Fitness-Check: RPE Shuttle R3 vs. W1 Sa.",
+    blocks:[
+      { num:"01", title:"Aufwärmen", sub:"15 min vollständig", tag:"tt-mob", tagLabel:"Warm-Up",
+        goal:"Vollständiges Aufwärmen — Peak-Einheit braucht die beste Vorbereitung.",
+        body: WARMUP_SA },
+      { num:"02", title:"Progressive Shuttle Runs", sub:"25s On / 35s Off · 5 Runden · progressiv", tag:"tt-shuttle", tagLabel:"Prog. Shuttle",
+        goal:"5 Runden — höchstes Shuttle-Volumen des Blocks. R4 + R5 unter Ermüdung = eigentlicher Stimulus. Fitness-Check Nr. 1.",
+        body: progShuttleHTML("5 Runden", "Fitness-Check: RPE Runde 3 hier vs. W1 Sa Runde 3. Tiefer = aerobe Adaptation. R1–R2 kontrolliert — R4/R5 werden hart."),
+        note:"5 Runden · RPE R3 tiefer als W1 Sa = 2 Wochen Entwicklung sichtbar." },
+      { num:"03", title:"HSR Block", sub:">19.7 km/h · 12s/20s · 12 Bouts", tag:"tt-hsr", tagLabel:"HSR",
+        goal:"12 Bouts nach 5 Shuttle-Runden. Letzten 4 mit COD. Fitness-Check Nr. 2.",
+        body: hsrHTML("12s","20s","&gt;19.7","12","~780m") + `<div class="drills"><div class="drill d-hsr"><div class="drill-name">3 min Pause nach Shuttle → starten</div><div class="drill-detail">Bouts 1–8: Box-to-Box gerade | Bouts 9–12: mit 45° COD</div><div class="drill-cue">💬 Pace nach 5 Shuttle-Runden halten = Spielrealität U21.</div></div></div>` },
+      { num:"04", title:"RSA 20m + 5-10-5", sub:"3 Sets × 5× 20m + 8× 5-10-5", tag:"tt-rsa", tagLabel:"RSA",
+        goal:"Fitness-Check Nr. 3: RSA 20m unter Gesamtermüdung. Qualität der Stops unter Druck.",
+        body:`<table class="sets-table"><tr><th>Set</th><th>Sprints</th><th>Distanz</th><th>Pause/Sprint</th><th>Pause/Set</th></tr><tr><td>1</td><td>5×</td><td>20m</td><td>25s</td><td>4 min</td></tr><tr><td>2</td><td>5×</td><td>20m</td><td>25s</td><td>4 min</td></tr><tr><td>3</td><td>5×</td><td>20m</td><td>25s</td><td>—</td></tr></table>` + fivetenHTML("8 Wdh. (4× rechts, 4× links)", "25s") + `<div class="note-box">📌 <b>Abschluss 27.06:</b> 5× Prog. Shuttle · ~780m HSR · ~280m Sprint. Danach 2 volle Ruhetage (Sa + So). <b>Montag 30.06 startet die Vorbereitung — du bist bereit.</b></div>` }
+    ]
+  },
+  "2_sa": {
+    icon:"😴", iconCls:"si-off", title:"RUHETAG — AKTIVE REGENERATION",
+    sub:"OFF · 28.06", dur:"Optional 20–30 min", int:"Sehr tief", focus:"Regeneration · kein strukturiertes Training",
+    note:"<b>Woche 2 Samstag — Ruhetag:</b> Bewusste Erholung nach der Peak-Einheit vom Freitag. Kein strukturiertes Training. Optional: lockerer Spaziergang, Schwimmen oder leichte Mobility.",
+    blocks:[
+      { num:"01", title:"Aktive Regeneration (optional)", sub:"20–30 min · Zone 1", tag:"tt-mob", tagLabel:"Recovery",
+        goal:"Durchblutung fördern ohne neue Belastung zu setzen. Nicht erzwingen — Körper erholen lassen.",
+        body:`<div class="drills"><div class="drill"><div class="drill-name">Option A: 20–30 min lockerer Spaziergang</div><div class="drill-detail">Kein Sport, kein Puls — einfach bewegen</div></div><div class="drill"><div class="drill-name">Option B: 15–20 min Schwimmen locker</div><div class="drill-detail">Keine Bahnen zählen — einfach treiben lassen</div></div><div class="drill"><div class="drill-name">Option C: 15 min Mobility / Stretching</div><div class="drill-detail">90/90 Hip · Couch Stretch · World's Greatest · Hamstring Floss · alles ohne Druck</div></div></div>`,
+        note:"Kein Training zwingend. Wenn der Körper Ruhe will → Ruhe geben. Morgen (So) ebenfalls OFF." }
+    ]
+  },
+  "2_so": {
+    icon:"🔋", iconCls:"si-off", title:"RUHETAG — VOLLSTÄNDIGE ERHOLUNG",
+    sub:"OFF · 29.06", dur:"—", int:"—", focus:"Vollständige Ruhe vor Vorbereitungsstart",
+    note:"<b>Woche 2 Sonntag — Ruhetag:</b> Kein Training. Morgen startet die Vorbereitungsphase. Heute: schlafen, essen, mental vorbereiten.",
+    blocks:[
+      { num:"01", title:"Vollständige Ruhe", sub:"Kein Training", tag:"tt-mob", tagLabel:"OFF",
+        goal:"Neuromuskuläre und mentale Erholung maximieren. Körper und Kopf bereit machen für Montag.",
+        body:`<div class="drills"><div class="drill"><div class="drill-name">Schlaf: 8–9 Stunden anstreben</div><div class="drill-detail">Wichtigste Regenerationsmaßnahme überhaupt</div></div><div class="drill"><div class="drill-name">Ernährung: Kohlenhydrate nicht vergessen</div><div class="drill-detail">Glykogenspeicher für Montag füllen — Pasta, Reis, Brot</div></div><div class="drill"><div class="drill-name">Mental: Vorbereitung visualisieren</div><div class="drill-detail">Erster Tag im Team — bereit sein, nicht nervös sein</div><div class="drill-cue">💬 Du hast 2 Wochen Arbeit gemacht. Vertraue dem Prozess.</div></div></div>`,
+        note:"Morgen 30.06: Start Vorbereitungsphase. Alles was du in diesen 2 Wochen gemacht hast zahlt sich ab jetzt aus." }
+    ]
+  }
+};
+
+let currentWeek = 1;
+let currentDay = 'mo';
+
+function setWeek(w) {
+  currentWeek = w;
+  currentDay = 'mo';
+  document.querySelectorAll('.week-tab').forEach((t,i) => t.classList.toggle('active', i+1===w));
+  const fills = ["40%","100%"];
+  const labels = ["Fundament — Einstieg","Aufbau — Fitness-Peak vor Vorbereitung"];
+  document.getElementById('prog-label').textContent = labels[w-1];
+  document.getElementById('prog-fill').style.width = fills[w-1];
+  renderDayStrip();
+  renderSession();
+}
+
+function setDay(day) {
+  currentDay = day;
+  renderDayStrip();
+  renderSession();
+}
+
+const DAY_LABELS = { mo:"MO", di:"DI", mi:"MI", fr:"FR", sa:"SA", so:"SO" };
+const DAY_NAMES  = { mo:"Montag", di:"Dienstag", mi:"Mittwoch", fr:"Freitag", sa:"Samstag", so:"Sonntag" };
+const DAY_BADGES = { mo:"b-mix", di:"b-rsa", mi:"b-hsr", fr:"b-spiel", sa:"b-off", so:"b-off" };
+const DAY_BADGE_LABELS = { mo:"Ausdauer", di:"Speed", mi:"HSR", fr:"Peak", sa:"OFF", so:"OFF" };
+
+const WEEK_DAYS = {
+  1: ['mo','di','mi','sa'],
+  2: ['mo','di','mi','fr','sa','so']
+};
+
+function renderDayStrip() {
+  const days = WEEK_DAYS[currentWeek];
+  const meta = DAYS_META[currentWeek];
+  const strip = document.getElementById('day-strip');
+  const cols = days.length;
+  strip.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  strip.innerHTML = days.map(d => `
+    <div class="day-btn${d===currentDay?' active':''}" onclick="setDay('${d}')">
+      <div class="day-btn-label">${DAY_NAMES[d]}</div>
+      <div class="day-btn-name">${DAY_LABELS[d]}</div>
+      <div class="day-btn-date">${meta[d]}</div>
+      <span class="day-btn-badge ${DAY_BADGES[d]}">${DAY_BADGE_LABELS[d]}</span>
+    </div>`).join('');
+}
+
+function renderSession() {
+  const key = `${currentWeek}_${currentDay}`;
+  const s = SESSIONS[key];
+  if (!s) return;
+  const container = document.getElementById('session-container');
+  let blocksHTML = s.blocks.map((b,i) => {
+    let noteHTML = b.note ? `<div class="note-box">📌 ${b.note}</div>` : '';
+    return `<div class="block-card${i===0?' open':''}">
+      <div class="block-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="block-header-left">
+          <div class="block-num">${b.num}</div>
+          <div class="block-info"><h4>${b.title}</h4><p>${b.sub}</p></div>
+        </div>
+        <div class="block-right"><span class="type-tag ${b.tag}">${b.tagLabel}</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="block-body">
+        <div class="block-goal">${b.goal}</div>
+        ${b.body}${noteHTML}
+      </div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="session-header-card">
+      <div class="session-icon-big ${s.iconCls}">${s.icon}</div>
+      <div class="session-title-block">
+        <h2>${s.title}</h2>
+        <p>${s.sub}</p>
+        <div class="session-stats">
+          <div class="stat-chip"><span>Dauer: </span><b>${s.dur}</b></div>
+          <div class="stat-chip"><span>Intensität: </span><b>${s.int}</b></div>
+          <div class="stat-chip"><span>Fokus: </span><b>${s.focus}</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="topup-note"><b>Einheit-Logik:</b> ${s.note}</div>
+    <div class="blocks">${blocksHTML}</div>`;
+}
+
+setWeek(1);
+</script>
+</body>
+</html>
